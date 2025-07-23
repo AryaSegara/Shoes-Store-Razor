@@ -1,0 +1,125 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoe Store Homepage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-white shadow-md fixed w-full top-0 z-50">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-blue-600">ShoeTrend</div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#" class="text-gray-700 hover:text-blue-600">Home</a>
+                <a href="#" class="text-gray-700 hover:text-blue-600">About</a>
+                <a href="#" class="text-gray-700 hover:text-blue-600">Product</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="loginBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Login</button>
+                <a href="#" class="text-gray-700 hover:text-blue-600">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span id="cartCount" class="bg-red-500 text-white text-xs rounded-full px-2 py-1">0</span>
+                </a>
+                <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white shadow-md">
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Home</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">About</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Product</a>
+        </div>
+        <!-- Login Modal -->
+        <div id="loginModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                <h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
+                <button id="adminLogin" class="w-full bg-blue-600 text-white py-2 rounded mb-2 hover:bg-blue-700"><a href="/LoginAdmin/Index">Login as Admin</a></button>
+                <button id="userLogin" class="w-full bg-green-600 text-white py-2 rounded mb-2 hover:bg-green-700">Login as User</button>
+                <button id="closeModal" class="w-full bg-gray-300 text-gray-700 py-2 rounded hover:bg-gray-400">Cancel</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="h-screen bg-cover bg-center flex items-center justify-center" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c')">
+        <div class="text-center text-white bg-black bg-opacity-50 p-8 rounded">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4">Step into Style</h1>
+            <p class="text-lg md:text-xl mb-6">Discover the latest trends in footwear</p>
+            <a href="#" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">Shop Now</a>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="container mx-auto px-4 py-12">
+        <h2 class="text-3xl font-bold text-center mb-8">Featured Products</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff" alt="Sneaker" class="w-full h-48 object-cover rounded">
+                <h3 class="text-xl font-semibold mt-2">Trendy Sneaker</h3>
+                <p class="text-gray-600">$59.99</p>
+                <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" onclick="addToCart()">Add to Cart</button>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5" alt="Running Shoe" class="w-full h-48 object-cover rounded">
+                <h3 class="text-xl font-semibold mt-2">Running Shoe</h3>
+                <p class="text-gray-600">$79.99</p>
+                <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" onclick="addToCart()">Add to Cart</button>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772" alt="Casual Shoe" class="w-full h-48 object-cover rounded">
+                <h3 class="text-xl font-semibold mt-2">Casual Shoe</h3>
+                <p class="text-gray-600">$49.99</p>
+                <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" onclick="addToCart()">Add to Cart</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 ShoeTrend. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Login Modal Toggle
+        const loginBtn = document.getElementById('loginBtn');
+        const loginModal = document.getElementById('loginModal');
+        const closeModal = document.getElementById('closeModal');
+
+        loginBtn.addEventListener('click', () => {
+            loginModal.classList.toggle('hidden');
+        });
+
+        closeModal.addEventListener('click', () => {
+            loginModal.classList.add('hidden');
+        });
+
+
+        // Cart Functionality
+        let cartCount = 0;
+        const cartCountElement = document.getElementById('cartCount');
+
+        function addToCart() {
+            cartCount++;
+            cartCountElement.textContent = cartCount;
+        }
+    </script>
+</body>
+</html>

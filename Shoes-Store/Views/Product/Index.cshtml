@@ -1,0 +1,336 @@
+﻿@using Shoes_Store.Models.DB
+@using Shoes_Store.Models.DTO
+@model List<ProductDTO>
+
+@{
+    ViewData["Title"] = "Product Management";
+    Layout = "/Views/DashboardAdmin/LayoutAdmin.cshtml";
+}
+
+<style>
+    /* Reuse root variables from _Layout.cshtml */
+    :root {
+        --primary: #1976D2;
+        --accent: #FFFFFF;
+        --accent-hover: #E3F2FD;
+        --background: #FAFAFA;
+        --text: #212121;
+        --text-muted: #757575;
+        --danger: #D32F2F;
+    }
+
+    .main {
+        background: var(--background);
+    }
+
+    .pagetitle {
+        background: var(--accent);
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+        .pagetitle h1 {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+    .breadcrumb-item a {
+        color: var(--primary);
+        transition: color 0.3s ease-in-out;
+    }
+
+        .breadcrumb-item a:hover {
+            color: var(--accent-hover);
+        }
+
+    .btn-create, .btn-update, .btn-delete {
+        border-radius: 6px;
+        padding: 6px 12px;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+
+    .btn-create, .btn-update {
+        background: var(--primary);
+        color: var(--accent);
+    }
+
+        .btn-create:hover, .btn-update:hover {
+            background: var(--accent-hover);
+            color: var(--primary);
+            opacity: 0.9;
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
+        }
+
+    .btn-delete {
+        background: var(--danger);
+        color: var(--accent);
+    }
+
+        .btn-delete:hover {
+            background: #b71c1c;
+            opacity: 0.9;
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(211, 47, 47, 0.2);
+        }
+
+    .product-grid {
+        animation: fadeInUp 0.5s ease-out 0.2s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+
+    .fade-in-card {
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
+
+        .fade-in-card:nth-child(1) {
+            animation-delay: 0.3s;
+        }
+
+        .fade-in-card:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        .fade-in-card:nth-child(3) {
+            animation-delay: 0.5s;
+        }
+
+        .fade-in-card:nth-child(4) {
+            animation-delay: 0.6s;
+        }
+
+        .fade-in-card:nth-child(5) {
+            animation-delay: 0.7s;
+        }
+
+    .product-card {
+        background: var(--accent);
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background 0.3s ease-in-out;
+    }
+
+        .product-card:hover {
+            background: var(--accent-hover);
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(25, 118, 210, 0.2);
+        }
+
+    .product-image {
+        max-height: 200px;
+        object-fit: cover;
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .product-image:hover {
+            transform: scale(1.1);
+        }
+
+    .card-title {
+        color: var(--primary);
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    .card-text {
+        color: var(--text);
+    }
+
+    .description-tooltip {
+        cursor: pointer;
+        text-decoration: underline dotted;
+    }
+
+    .price-format {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--primary);
+    }
+
+    .badge {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+    }
+
+    .rating i {
+        font-size: 0.9rem;
+        margin-right: 2px;
+    }
+
+    /* Animations */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .product-card {
+            margin-bottom: 20px;
+        }
+
+        .product-image {
+            max-height: 150px;
+        }
+
+        .btn-create, .btn-update, .btn-delete {
+            padding: 4px 8px;
+            font-size: 0.8rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+        }
+
+        .card-text {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Product Management</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/DashboardAdmin/Index">Home</a></li>
+                <li class="breadcrumb-item"><a href="/Product/Index">Products</a></li>
+                <li class="breadcrumb-item active">List</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Loading Animation -->
+                <div id="loading" class="text-center" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <!-- Add Product Button -->
+                <div class="text-end mb-3">
+                    <a href="@Url.Action("Edit", "Product")" class="btn btn-create"><i class="bi bi-plus-circle"></i> Add Product</a>
+                </div>
+
+                <!-- Product Grid -->
+                <div class="product-grid row" id="productGrid">
+                    @foreach (var data in Model)
+                    {
+
+                        <div class="col-lg-4 col-md-6 col-12 fade-in-card">
+                            <div class="card product-card h-100">
+                                <!-- Product Image -->
+                                <img src="@data.ImageUrl" alt="@data.Name" class="card-img-top product-image img-thumbnail"
+                                     onerror="this.onerror=null;this.src='/images/default-product.png';" />
+
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <h5 class="card-title">@data.Name</h5>
+                                    <p class="card-text description-tooltip" data-bs-toggle="tooltip" title="@data.Description">
+                                        @(data.Description.Length > 50 ? data.Description.Substring(0, 50) + "..." : data.Description)
+                                    </p>
+                                    <p class="card-text price price-format">@data.Price</p>
+                                    <span>
+                                        @data.ProductStatus
+                                    </span>
+
+                                </div>
+
+                                <!-- Card Footer -->
+                                <div class="card-footer d-flex justify-content-between">
+                                    <a href="@Url.Action("Edit", "Product", new { id = data.Id })" class="btn btn-sm btn-update"><i class="bi bi-pencil"></i> Update</a>
+                                    <form method="post" action="@Url.Action("Delete", "Product")" style="display:inline">
+
+                                        <input type="hidden" name="id" value="@data.Id" />
+                                        <button type="submit" class="btn btn-sm btn-delete" onclick="return confirm('Apakah Anda yakin ingin menghapus Product ini?');"><i class="bi bi-trash"></i> Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+<!-- Confirm Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the product "<span id="productName"></span>"?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="post" action="@Url.Action("Delete", "Product")">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="productId" />
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Show loading animation
+            const loading = document.getElementById('loading');
+            const productGrid = document.getElementById('productGrid');
+
+            loading.style.display = 'block';
+            setTimeout(() => {
+                loading.style.display = 'none';
+                productGrid.style.opacity = '1';
+                productGrid.style.transform = 'translateY(0)';
+            }, 1000);
+
+            // Format prices
+            document.querySelectorAll('.price-format').forEach(function (element) {
+                let value = parseFloat(element.textContent);
+                if (!isNaN(value)) {
+                    element.textContent = "IDR " + value.toLocaleString("id-ID", { minimumFractionDigits: 0 });
+                }
+            });
+
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+            // Handle delete button click
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.getAttribute('data-id');
+                    const productName = this.getAttribute('data-name');
+                    document.getElementById('productId').value = productId;
+                    document.getElementById('productName').textContent = productName;
+                    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+                    deleteModal.show();
+                });
+            });
+        });
+    </script>
+}

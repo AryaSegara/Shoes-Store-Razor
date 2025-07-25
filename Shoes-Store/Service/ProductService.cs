@@ -38,6 +38,29 @@ namespace Shoes_Store.Service
             return data;
         }
 
+
+        //public List<ProductDTO> GetListProduct()
+        //{
+        //    var baseUrl = "/images/";
+
+        //    var data = _context.Products
+        //        .Include(p => p.Category)
+        //        .Where(x => x.ProductStatus != GeneralStatus.GeneralStatusData.delete)
+        //        .Select(x => new ProductDTO
+        //        {
+        //            Id = x.Id,
+        //            Name = x.Name,
+        //            Description = x.Description,
+        //            Price = x.Price,
+        //            ImageUrl = !string.IsNullOrEmpty(x.Image) ? baseUrl + x.Image 
+        //            CategoryName = x.Category != null ? x.Category.Name : "-",
+        //            ProductStatus = x.ProductStatus
+        //        }).ToList();
+
+        //    return data;
+        //}
+
+
         public Product GetProductById(int id)
         {
             var data = _context.Products.Where(x => x.Id == id && x.ProductStatus != GeneralStatusData.delete).FirstOrDefault();

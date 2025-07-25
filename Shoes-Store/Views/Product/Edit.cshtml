@@ -1,0 +1,317 @@
+﻿﻿@using Shoes_Store.Models.DB
+@using Shoes_Store.Models.DTO
+@model Product
+
+@{
+    ViewData["Title"] = "Product Management";
+    Layout = "/Views/DashboardAdmin/LayoutAdmin.cshtml";
+
+}
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Product Management</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/DashboardAdmin/Index">Home</a></li>
+                <li class="breadcrumb-item"><a href="/Product/Index">Products</a></li>
+                <li class="breadcrumb-item active">@(Model.Id == 0 ? "Add" : "Edit")</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card product-card">
+                    <div class="card-body">
+                        <h5 class="card-title">@(Model.Id == 0 ? "Add Product" : "Edit Product")</h5>
+
+                        <!-- Enhanced Form -->
+                        <form asp-controller="Product" asp-action="Edit" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" asp-for="Id" />
+
+                            <div class="row mb-3 form-group">
+                                <label for="Name" class="col-sm-2 col-form-label"><i class="bi bi-box"></i> Name</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="Name" asp-for="Name" required>
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-3 form-group">
+                                <label for="Description" class="col-sm-2 col-form-label"><i class="bi bi-text-paragraph"></i> Description</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" id="Description" asp-for="Description" rows="4"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-3 form-group">
+                                <label for="Price" class="col-sm-2 col-form-label"><i class="bi bi-currency-dollar"></i> Price</label>
+                                <div class="col-sm-10">
+                                    <input type="number" class="form-control" id="Price" asp-for="Price" min="0" step="0.01" required>
+                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-3 form-group">
+                                <label for="ImageFile" class="col-sm-2 col-form-label"><i class="bi bi-image"></i> Image</label>
+                                <div class="col-sm-10">
+                                    <input type="file" class="form-control" id="ImageFile" name="ImageFile" accept="image/*" />
+                                    <div class="mt-2 image-preview">
+                                        @if (!string.IsNullOrEmpty(Model.Image))
+                                        {
+                                            <img src="@Model.Image" alt="Current Image" class="img-thumbnail" style="max-height: 200px;" />
+                                            <input type="hidden" asp-for="Image" />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3 form-group">
+                                <label for="CategoryId" class="col-sm-2 col-form-label"><i class="bi bi-tag"></i> Category</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select" id="CategoryId" asp-for="CategoryId" asp-items="ViewBag.Category" required>
+                                        <option value="">-- Select Category --</option>
+                                    </select>
+                                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-3 form-group">
+                                <label for="ProductStatus" class="col-sm-2 col-form-label"><i class="bi bi-toggle-on"></i> Status</label>
+                                <div class="col-sm-10">
+                                    <select class="form-select" id="ProductStatus" asp-for="ProductStatus" required>
+                                        <option value="">-- Select Status --</option>
+                                        <option value="Published">Published</option>
+                                        <option value="Unpublished">Unpublished</option>
+                                    </select>
+                                    <span asp-validation-for="ProductStatus" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-save"><i class="bi bi-check-circle"></i> Save Data</button>
+                                <a href="@Url.Action("Index", "Product")" class="btn btn-cancel"><i class="bi bi-x-circle"></i> Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+
+<style>
+    /* Reuse root variables from _Layout.cshtml */
+    :root {
+        --primary: #1976D2;
+        --accent: #FFFFFF;
+        --accent-hover: #E3F2FD;
+        --background: #FAFAFA;
+        --text: #212121;
+        --text-muted: #757575;
+    }
+
+    .main {
+        background: var(--background);
+    }
+
+    .pagetitle {
+        background: var(--accent);
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+        .pagetitle h1 {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+    .breadcrumb-item a {
+        color: var(--primary);
+        transition: color 0.3s ease-in-out;
+    }
+
+        .breadcrumb-item a:hover {
+            color: var(--accent-hover);
+        }
+
+    .product-card {
+        background: var(--accent);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        animation: fadeInUp 0.5s ease-out 0.2s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+
+    .card-title {
+        color: var(--primary);
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .form-group {
+        opacity: 0;
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
+
+        .form-group:nth-child(1) {
+            animation-delay: 0.3s;
+        }
+
+        .form-group:nth-child(2) {
+            animation-delay: 0.35s;
+        }
+
+        .form-group:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .form-group:nth-child(4) {
+            animation-delay: 0.45s;
+        }
+
+        .form-group:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .form-group:nth-child(6) {
+            animation-delay: 0.55s;
+        }
+
+    .form-control, .form-select {
+        border-radius: 6px;
+        border: 1px solid var(--text-muted);
+        transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
+            transform: scale(1.02);
+        }
+
+        .form-select:hover, .form-control:hover {
+            border-color: var(--primary);
+            transform: scale(1.02);
+            box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
+        }
+
+    .col-form-label {
+        color: var(--text);
+        font-weight: 500;
+    }
+
+        .col-form-label i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+
+    .image-preview img {
+        transition: opacity 0.3s ease-in-out;
+        opacity: 0;
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .btn-save, .btn-cancel {
+        border-radius: 6px;
+        padding: 8px 16px;
+        margin: 0 10px;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+
+    .btn-save {
+        background: var(--primary);
+        color: var(--accent);
+    }
+
+        .btn-save:hover {
+            background: var(--accent-hover);
+            color: var(--primary);
+            opacity: 0.9;
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
+        }
+
+    .btn-cancel {
+        background: var(--text-muted);
+        color: var(--accent);
+    }
+
+        .btn-cancel:hover {
+            background: #5e5e5e;
+            opacity: 0.9;
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(117, 117, 117, 0.2);
+        }
+
+    .text-danger {
+        font-size: 0.85rem;
+    }
+
+    /* Animations */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .col-form-label {
+            text-align: left;
+            margin-bottom: 8px;
+        }
+
+        .btn-save, .btn-cancel {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+
+        .image-preview img {
+            max-height: 150px;
+        }
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Image preview before upload
+        document.getElementById('ImageFile').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const previewContainer = document.querySelector('.image-preview');
+                    let img = previewContainer.querySelector('img');
+                    if (!img) {
+                        img = document.createElement('img');
+                        img.className = 'img-thumbnail';
+                        img.style.maxHeight = '200px';
+                        previewContainer.appendChild(img);
+                    }
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

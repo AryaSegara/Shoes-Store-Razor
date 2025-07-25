@@ -124,7 +124,6 @@ D:\c#\Shoes-Store\Shoes-Store\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Wi
 D:\c#\Shoes-Store\Shoes-Store\obj\Debug\net8.0\rjimswa.dswa.cache.json
 D:\c#\Shoes-Store\Shoes-Store\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 D:\c#\Shoes-Store\Shoes-Store\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
-D:\c#\Shoes-Store\Shoes-Store\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 D:\c#\Shoes-Store\Shoes-Store\obj\Debug\net8.0\scopedcss\bundle\Shoes-Store.styles.css
 D:\c#\Shoes-Store\Shoes-Store\obj\Debug\net8.0\scopedcss\projectbundle\Shoes-Store.bundle.scp.css
 D:\c#\Shoes-Store\Shoes-Store\obj\Debug\net8.0\staticwebassets.build.json
@@ -138,3 +137,5 @@ D:\c#\Shoes-Store\Shoes-Store\obj\Debug\net8.0\refint\Shoes-Store.dll
 D:\c#\Shoes-Store\Shoes-Store\obj\Debug\net8.0\Shoes-Store.pdb
 D:\c#\Shoes-Store\Shoes-Store\obj\Debug\net8.0\Shoes-Store.genruntimeconfig.cache
 D:\c#\Shoes-Store\Shoes-Store\obj\Debug\net8.0\ref\Shoes-Store.dll
+D:\c#\Shoes-Store\Shoes-Store\obj\Debug\net8.0\Shoes-Store.sourcelink.json
+D:\c#\Shoes-Store\Shoes-Store\obj\Debug\net8.0\scopedcss\Views\Shared\_LayoutAdmin.cshtml.rz.scp.css

@@ -18,8 +18,7 @@ namespace Shoes_Store.Controllers
             return View();
         }
 
-        [HttpPost]
-        [HttpPost]
+
         public IActionResult Login(AccountAdminDTO accountAdminDTO)
         {
             try
@@ -34,7 +33,9 @@ namespace Shoes_Store.Controllers
                 // (Opsional) Simpan data ke session, cookie, dsb
                 //HttpContext.Session.SetString("AdminName", accountAdminDTO.Name); // butuh konfigurasi session sebelumnya
 
+                //return RedirectToAction("Index", "Home");
                 return RedirectToAction("Index", "DashboardAdmin");
+
             }
             catch (Exception ex)
             {

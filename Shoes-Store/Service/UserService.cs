@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Shoes_Store.Interface;
 using Shoes_Store.Models;
 using Shoes_Store.Models.DB;
@@ -46,9 +47,7 @@ namespace Shoes_Store.Service
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
 
-                //simpan session
-                _httpContextAccessor.HttpContext?.Session.SetInt32("UserId", user.Id);
-                _httpContextAccessor.HttpContext?.Session.SetString("Name", user.Name);
+                
 
                 // tambah saldo user berdasarkan user.Id
                 _context.UserSaldos.Add(new UserSaldo { UserId = user.Id });
@@ -72,6 +71,8 @@ namespace Shoes_Store.Service
                     u.Username == loginDTO.Username &&
                     u.UserStatus == GeneralStatus.GeneralStatusData.Published);
 
+
+
                 if (user == null)
                 {
                     return (false, 0);
@@ -81,6 +82,8 @@ namespace Shoes_Store.Service
                 {
                     return (false,0);
                 }
+
+
 
                 return (true,user.Id);
 
@@ -155,6 +158,19 @@ namespace Shoes_Store.Service
             }
 
             return data;
+        }
+
+        public List<SelectListItem> Users()
+        {
+            var datas = _context.Users
+                .Where(x => x.UserStatus == GeneralStatusData.Published)
+                .Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                }).ToList();
+
+            return datas;
         }
 
         private string HashPassword(string pin)

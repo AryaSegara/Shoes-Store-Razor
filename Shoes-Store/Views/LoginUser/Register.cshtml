@@ -1,0 +1,684 @@
+﻿@using Shoes_Store.Models.DTO;
+@model RegisterDTO;
+
+@{
+    Layout = null;
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+
+@* @if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success text-green-500 bg-green-100 px-4 py-2 rounded-xl shadow-md mb-4">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger text-red-500 bg-red-100 px-4 py-2 rounded-xl shadow-md mb-4">
+        @TempData["ErrorMessage"]
+    </div>
+} *@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Shoes Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .shoe-pattern {
+            background-image: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .float-delay-1 {
+            animation-delay: -2s;
+        }
+
+        .float-delay-2 {
+            animation-delay: -4s;
+        }
+
+        .float-delay-3 {
+            animation-delay: -6s;
+        }
+
+        @@keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 1s ease-out;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .fade-in-down {
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @@keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @@keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @@keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .input-focus {
+            transition: all 0.3s ease;
+        }
+
+            .input-focus:focus {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            }
+
+        .btn-hover {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .btn-hover::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                transition: left 0.5s;
+            }
+
+            .btn-hover:hover::before {
+                left: 100%;
+            }
+
+            .btn-hover:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+            }
+
+        .social-btn {
+            transition: all 0.3s ease;
+        }
+
+            .social-btn:hover {
+                transform: translateY(-3px) scale(1.05);
+            }
+
+        .login-container {
+            animation: containerSlide 1.5s ease-out;
+        }
+
+        @@keyframes containerSlide {
+            from {
+                opacity: 0;
+                transform: scale(0.9) rotateY(10deg);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) rotateY(0deg);
+            }
+        }
+
+        .shoe-showcase {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .shoe-showcase::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+                animation: rotate 15s linear infinite;
+            }
+
+        @@keyframes rotate {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .typing-animation {
+            border-right: 3px solid #667eea;
+            animation: blink 1s infinite;
+        }
+
+        @@keyframes blink {
+            0%, 50% {
+                border-color: transparent;
+            }
+
+            51%, 100% {
+                border-color: #667eea;
+            }
+        }
+
+        .wave {
+            animation: wave 2s ease-in-out infinite;
+        }
+
+        @@keyframes wave {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(20deg);
+            }
+
+            75% {
+                transform: rotate(-20deg);
+            }
+        }
+
+        .pulse-ring {
+            animation: pulse-ring 2s infinite;
+        }
+
+        @@keyframes pulse-ring {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        .password-strength {
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .strength-weak {
+            background: #ef4444;
+            width: 33%;
+        }
+
+        .strength-medium {
+            background: #f59e0b;
+            width: 66%;
+        }
+
+        .strength-strong {
+            background: #10b981;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="gradient-bg shoe-pattern min-h-screen flex items-center justify-center p-4 relative overflow-x-hidden overflow-y-auto">
+
+    <!-- Floating Elements -->
+    <div class="absolute top-20 left-10 float-animation">
+        <i class="fas fa-shoe-prints text-white text-4xl opacity-20"></i>
+    </div>
+    <div class="absolute bottom-32 right-16 float-animation float-delay-1">
+        <i class="fas fa-running text-white text-3xl opacity-25"></i>
+    </div>
+    <div class="absolute top-1/2 left-20 float-animation float-delay-2">
+        <i class="fas fa-shoe-prints text-white text-2xl opacity-30"></i>
+    </div>
+    <div class="absolute top-32 right-32 float-animation float-delay-3">
+        <i class="fas fa-socks text-white text-2xl opacity-20"></i>
+    </div>
+    <div class="absolute bottom-20 left-1/3 float-animation">
+        <i class="fas fa-shoe-prints text-white text-3xl opacity-15"></i>
+    </div>
+
+    <!-- Back to Login Button -->
+    <a href="/LoginUser/Index" class="absolute top-6 left-6 glass-effect text-white px-4 py-2 rounded-full hover:shadow-lg transition-all duration-300 fade-in-down">
+        <i class="fas fa-arrow-left mr-2"></i>Back to Login
+    </a>
+
+    <!-- Main Register Container -->
+    <div class="w-full max-w-5xl mx-auto my-8 px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center min-h-[75vh]">
+
+            <!-- Left Side - Branding & Illustration -->
+            <div class="text-center lg:text-left slide-in-left">
+                <div class="mb-6">
+                    <h1 class="text-3xl lg:text-5xl font-bold text-white mb-3">
+                        Join Shoes Store
+                        <span class="wave inline-block">🚀</span>
+                    </h1>
+                    <p class="text-lg text-white opacity-90 mb-4 typing-animation">
+                        Create your account and discover amazing footwear
+                    </p>
+                </div>
+
+                <!-- Shoe Illustration -->
+                <div class="shoe-showcase relative">
+                    <div class="relative z-10 p-6">
+                        <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                             alt="Premium Shoes Collection"
+                             class="w-full max-w-sm mx-auto transform hover:scale-105 transition-transform duration-500 drop-shadow-2xl">
+                    </div>
+                </div>
+
+                <!-- Benefits -->
+                <div class="grid grid-cols-3 gap-3 mt-6">
+                    <div class="glass-effect p-3 rounded-xl text-center">
+                        <div class="text-2xl font-bold text-white">Free</div>
+                        <div class="text-white opacity-80 text-xs">Shipping</div>
+                    </div>
+                    <div class="glass-effect p-3 rounded-xl text-center">
+                        <div class="text-2xl font-bold text-white">30%</div>
+                        <div class="text-white opacity-80 text-xs">New Member</div>
+                    </div>
+                    <div class="glass-effect p-3 rounded-xl text-center">
+                        <div class="text-2xl font-bold text-white">24/7</div>
+                        <div class="text-white opacity-80 text-xs">Support</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Register Form -->
+            <div class="slide-in-right">
+                <div class="glass-effect p-6 lg:p-8 rounded-3xl shadow-2xl login-container max-w-md mx-auto">
+
+                    <!-- Logo & Title -->
+                    <div class="text-center mb-6 fade-in-up">
+                        <div class="text-3xl font-bold bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent mb-2 drop-shadow-2xl">
+                            <i class="fas fa-shoe-prints mr-2 text-indigo-300"></i>Shoes Store
+                        </div>
+                        <p class="text-white font-medium drop-shadow-lg">Create your account</p>
+                    </div>
+
+                    <!-- Social Register Buttons -->
+                    <div class="space-y-2 mb-4 fade-in-up">
+                        <button class="w-full bg-white bg-opacity-90 text-gray-800 py-2.5 px-4 rounded-xl font-semibold social-btn flex items-center justify-center shadow-lg text-sm">
+                            <i class="fab fa-google text-red-500 mr-2"></i>
+                            Sign up with Google
+                        </button>
+                        <button class="w-full bg-blue-600 bg-opacity-90 text-white py-2.5 px-4 rounded-xl font-semibold social-btn flex items-center justify-center shadow-lg text-sm">
+                            <i class="fab fa-facebook mr-2"></i>
+                            Sign up with Facebook
+                        </button>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="relative mb-4 fade-in-up">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-white border-opacity-30"></div>
+                        </div>
+                        <div class="relative flex justify-center text-xs">
+                            <span class="px-3 bg-transparent text-white opacity-80">Or register with email</span>
+                        </div>
+                    </div>
+
+                    <!-- Register Form -->
+                    <form class="space-y-4 fade-in-up" asp-controller="LoginUser" asp-action="Register" method="post" >
+                        <div>
+                            <label class="block text-white text-xs font-semibold mb-1 drop-shadow-lg">
+                                <i class="fas fa-user mr-1"></i>Username
+                            </label>
+                            <input type="text"
+                                   name="username"
+                                   asp-for="Username"
+                                   required
+                                   id="username"
+                                   class="w-full px-3 py-2.5 bg-gray-800 bg-opacity-80 border border-gray-600 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:border-indigo-400 focus:bg-opacity-90 input-focus shadow-lg text-sm"
+                                   placeholder="Choose a username">
+                            <div id="usernameValidation" class="text-xs mt-1 hidden">
+                                <span class="text-red-400"><i class="fas fa-times mr-1"></i>Username must be at least 3 characters</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-white text-xs font-semibold mb-1 drop-shadow-lg">
+                                <i class="fas fa-envelope mr-1"></i>Email Address
+                            </label>
+                            <input type="email"
+                                   name="email"
+                                   asp-for="Email"
+                                   required
+                                   id="email"
+                                   class="w-full px-3 py-2.5 bg-gray-800 bg-opacity-80 border border-gray-600 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:border-indigo-400 focus:bg-opacity-90 input-focus shadow-lg text-sm"
+                                   placeholder="Enter your email">
+                            <div id="emailValidation" class="text-xs mt-1 hidden">
+                                <span class="text-red-400"><i class="fas fa-times mr-1"></i>Please enter a valid email</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-white text-xs font-semibold mb-1 drop-shadow-lg">
+                                <i class="fas fa-lock mr-1"></i>Password
+                            </label>
+                            <div class="relative">
+                                <input type="password"
+                                       name="password"
+                                       asp-for="Password"
+                                       required
+                                       id="password"
+                                       class="w-full px-3 py-2.5 bg-gray-800 bg-opacity-80 border border-gray-600 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:border-indigo-400 focus:bg-opacity-90 input-focus pr-10 shadow-lg text-sm"
+                                       placeholder="Create a password">
+                                <button type="button"
+                                        id="togglePassword"
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-white transition-colors">
+                                    <i class="fas fa-eye text-sm" id="eyeIcon"></i>
+                                </button>
+                            </div>
+                           
+                        </div>
+
+                        <div>
+                            <label class="block text-white text-xs font-semibold mb-1 drop-shadow-lg">
+                                <i class="fas fa-lock mr-1"></i>Confirm Password
+                            </label>
+                            <div class="relative">
+                                <input type="password"
+                                       asp-for="ConfirmPassword"
+                                       required
+                                       id="confirmPassword"
+                                       class="w-full px-3 py-2.5 bg-gray-800 bg-opacity-80 border border-gray-600 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:border-indigo-400 focus:bg-opacity-90 input-focus pr-10 shadow-lg text-sm"
+                                       placeholder="Confirm your password">
+                                <button type="button"
+                                        id="toggleConfirmPassword"
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-white transition-colors">
+                                    <i class="fas fa-eye text-sm" id="eyeConfirmIcon"></i>
+                                </button>
+                            </div>
+                            <div id="confirmPasswordValidation" class="text-xs mt-1 hidden">
+                                <span class="text-red-400"><i class="fas fa-times mr-1"></i>Passwords do not match</span>
+                            </div>
+                        </div>
+
+                        <div class="text-xs">
+                            <label class="flex items-start text-white font-medium">
+                                <input type="checkbox" required id="termsCheck" class="mr-1.5 mt-0.5 rounded border-gray-400 bg-gray-700 text-indigo-600 focus:ring-indigo-500">
+                                <span class="leading-relaxed">I agree to the <a href="#" class="text-indigo-300 hover:text-indigo-100 underline">Terms of Service</a> and <a href="#" class="text-indigo-300 hover:text-indigo-100 underline">Privacy Policy</a></span>
+                            </label>
+                        </div>
+
+                        <button type="submit"
+                                class="w-full bg-gradient-to-r from-indigo-700 to-purple-700 text-white py-3 rounded-xl font-bold btn-hover relative shadow-xl text-sm">
+                            <span >
+                                <i class="fas fa-user-plus mr-1"></i>Create Account
+                            </span>
+                            <div id="loadingSpinner" class="hidden">
+                                <i class="fas fa-spinner fa-spin mr-1"></i>Creating Account...
+                            </div>
+                        </button>
+                    </form>
+
+                    <!-- Login Link -->
+                    <div class="text-center mt-4 fade-in-up">
+                        <p class="text-white font-medium drop-shadow-lg text-xs">
+                            Already have an account?
+                            <a href="/LoginUser/Index" class="text-indigo-300 hover:text-indigo-100 font-bold transition-colors underline">
+                                Sign In
+                            </a>
+                        </p>
+                    </div>
+
+                    <!-- Features -->
+                    <div class="mt-6 pt-4 border-t border-white border-opacity-30 fade-in-up">
+                        <div class="grid grid-cols-3 gap-3 text-center">
+                            <div class="text-white font-medium">
+                                <i class="fas fa-shield-alt text-lg mb-1 block text-green-400"></i>
+                                <span class="text-xs drop-shadow-lg">Secure</span>
+                            </div>
+                            <div class="text-white font-medium">
+                                <i class="fas fa-gift text-lg mb-1 block text-blue-400"></i>
+                                <span class="text-xs drop-shadow-lg">Free Signup</span>
+                            </div>
+                            <div class="text-white font-medium">
+                                <i class="fas fa-star text-lg mb-1 block text-yellow-400"></i>
+                                <span class="text-xs drop-shadow-lg">Premium Access</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="messageContainer" class="fixed top-4 right-4 z-50"></div>
+
+    <script>
+        // Inisialisasi DOM elements
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const eyeConfirmIcon = document.getElementById('eyeConfirmIcon');
+
+        const confirmPasswordValidation = document.getElementById('confirmPasswordValidation');
+
+        // Password Toggle Function untuk Password utama
+        if (togglePassword && password && eyeIcon) {
+            togglePassword.addEventListener('click', function() {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+
+                // Update icon
+                if (type === 'password') {
+                    eyeIcon.className = 'fas fa-eye text-sm';
+                } else {
+                    eyeIcon.className = 'fas fa-eye-slash text-sm';
+                }
+            });
+        }
+
+        // Password Toggle Function untuk Confirm Password
+        if (toggleConfirmPassword && confirmPassword && eyeConfirmIcon) {
+            toggleConfirmPassword.addEventListener('click', function() {
+                const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+                confirmPassword.setAttribute('type', type);
+
+                // Update icon
+                if (type === 'password') {
+                    eyeConfirmIcon.className = 'fas fa-eye text-sm';
+                } else {
+                    eyeConfirmIcon.className = 'fas fa-eye-slash text-sm';
+                }
+            });
+        }
+
+        // Confirm password validation
+        // if (confirmPassword && password && confirmPasswordValidation) {
+        //     confirmPassword.addEventListener('input', function() {
+        //         if (this.value !== password.value) {
+        //             confirmPasswordValidation.classList.remove('hidden');
+        //             this.classList.add('border-red-500');
+        //             this.classList.remove('border-green-500');
+        //         } else {
+        //             confirmPasswordValidation.classList.add('hidden');
+        //             this.classList.remove('border-red-500');
+        //             this.classList.add('border-green-500');
+        //         }
+        //     });
+        // }
+
+        // Form Submission
+        // const registerForm = document.getElementById('registerForm');
+        // const registerText = document.getElementById('registerText');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        // if (registerForm) {
+        //     registerForm.addEventListener('submit', function(e) {
+        //         e.preventDefault();
+
+        //         Show loading state
+        //         if (registerText && loadingSpinner) {
+        //             registerText.classList.add('hidden');
+        //             loadingSpinner.classList.remove('hidden');
+        //         }
+
+        //         Simulate registration process
+        //         setTimeout(() => {
+        //             if (registerText && loadingSpinner) {
+        //                 registerText.classList.remove('hidden');
+        //                 loadingSpinner.classList.add('hidden');
+        //             }
+
+        //             showMessage('Account created successfully! Welcome to Shoes Store!', 'success');
+
+        //             Redirect after success message
+        //             setTimeout(() => {
+        //                 window.location.href = '#login';
+        //             }, 2000);
+        //         }, 2500);
+        //     });
+        // }
+
+        // Message System
+        function showMessage(message, type) {
+            const messageContainer = document.getElementById('messageContainer');
+            if (!messageContainer) return;
+
+            const messageDiv = document.createElement('div');
+
+            const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+            const icon = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+
+            messageDiv.className = `${bgColor} text-white px-6 py-3 rounded-lg shadow-lg mb-4 transform translate-x-full transition-transform duration-300`;
+            messageDiv.innerHTML = `
+                <div class="flex items-center">
+                    <i class="${icon} mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+
+            messageContainer.appendChild(messageDiv);
+
+            // Slide in
+            setTimeout(() => {
+                messageDiv.style.transform = 'translateX(0)';
+            }, 100);
+
+            // Slide out and remove
+            setTimeout(() => {
+                messageDiv.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (messageContainer.contains(messageDiv)) {
+                        messageContainer.removeChild(messageDiv);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Smooth scroll effect for inputs
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                if (this.parentElement) {
+                    this.parentElement.style.transform = 'translateY(-2px)';
+                }
+            });
+
+            input.addEventListener('blur', function() {
+                if (this.parentElement) {
+                    this.parentElement.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        // Add pulse effect to floating elements
+        document.querySelectorAll('.float-animation').forEach((element, index) => {
+            element.addEventListener('mouseenter', function() {
+                this.style.animation = 'none';
+                this.style.transform = 'scale(1.2)';
+                this.style.transition = 'all 0.3s ease';
+            });
+
+            element.addEventListener('mouseleave', function() {
+                this.style.animation = `float 6s ease-in-out infinite`;
+                this.style.animationDelay = `${-2 * index}s`;
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

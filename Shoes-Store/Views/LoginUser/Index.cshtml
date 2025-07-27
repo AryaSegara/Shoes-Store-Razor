@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Shoes_Store.Models.DTO;
+@model LoginDTO;
+
+@{
     Layout = null;
 }
 
@@ -282,6 +285,7 @@
         }
     </style>
 </head>
+
 <body class="gradient-bg shoe-pattern min-h-screen flex items-center justify-center p-4 relative overflow-x-hidden overflow-y-auto">
 
     <!-- Floating Elements -->
@@ -302,7 +306,7 @@
     </div>
 
     <!-- Back to Home Button -->
-    <a href="#" class="absolute top-6 left-6 glass-effect text-white px-4 py-2 rounded-full hover:shadow-lg transition-all duration-300 fade-in-down">
+    <a href="/Home/Index" class="absolute top-6 left-6 glass-effect text-white px-4 py-2 rounded-full hover:shadow-lg transition-all duration-300 fade-in-down">
         <i class="fas fa-arrow-left mr-2"></i>Back to Home
     </a>
 
@@ -383,15 +387,16 @@
                     </div>
 
                     <!-- Login Form -->
-                    <form class="space-y-4 fade-in-up" id="loginForm">
+                    <form class="space-y-4 fade-in-up" asp-controller="LoginUser" asp-action="Index" method="post" >
                         <div>
                             <label class="block text-white text-xs font-semibold mb-1 drop-shadow-lg">
-                                <i class="fas fa-envelope mr-1"></i>Email Address
+                                <i class="fas fa-envelope mr-1"></i>Username
                             </label>
-                            <input type="email"
+                            <input type="text"
+                                   asp-for="Username"
                                    required
                                    class="w-full px-3 py-2.5 bg-gray-800 bg-opacity-80 border border-gray-600 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:border-indigo-400 focus:bg-opacity-90 input-focus shadow-lg text-sm"
-                                   placeholder="Enter your email">
+                                   placeholder="Enter your Username">
                         </div>
 
                         <div>
@@ -400,6 +405,7 @@
                             </label>
                             <div class="relative">
                                 <input type="password"
+                                       asp-for="Password"
                                        required
                                        id="password"
                                        class="w-full px-3 py-2.5 bg-gray-800 bg-opacity-80 border border-gray-600 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:border-indigo-400 focus:bg-opacity-90 input-focus pr-10 shadow-lg text-sm"
@@ -414,7 +420,7 @@
 
                         <div class="flex items-center justify-between text-xs">
                             <label class="flex items-center text-white font-medium">
-                                <input type="checkbox" class="mr-1.5 rounded border-gray-400 bg-gray-700 text-indigo-600 focus:ring-indigo-500">
+                                <input type="checkbox" asp-for="RememberMe" class="mr-1.5 rounded border-gray-400 bg-gray-700 text-indigo-600 focus:ring-indigo-500">
                                 Remember me
                             </label>
                             <a href="#" class="text-indigo-300 hover:text-indigo-100 transition-colors font-medium">
@@ -429,11 +435,11 @@
                                     class="bg-gradient-to-r from-green-600 to-green-700 text-white py-2.5 rounded-xl font-semibold btn-hover active-login-type shadow-lg text-xs">
                                 <i class="fas fa-user mr-1"></i>Customer
                             </button>
-                            <button type="button"
+                            @* <button type="button"
                                     id="adminLoginBtn"
                                     class="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-2.5 rounded-xl font-semibold btn-hover shadow-lg text-xs">
                                 <i class="fas fa-crown mr-1"></i>Admin
-                            </button>
+                            </button> *@
                         </div>
 
                         <button type="submit"
@@ -531,33 +537,32 @@
         document.head.appendChild(style);
 
         // Form Submission
-        const loginForm = document.getElementById('loginForm');
-        const loadingSpinner = document.getElementById('loadingSpinner');
+        // const loadingSpinner = document.getElementById('loadingSpinner');
 
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+        // loginForm.addEventListener('submit', function(e) {
+        //     e.preventDefault();
 
-            // Show loading state
-            loginText.classList.add('hidden');
-            loadingSpinner.classList.remove('hidden');
+        //     Show loading state
+        //     loginText.classList.add('hidden');
+        //     loadingSpinner.classList.remove('hidden');
 
-            // Simulate login process
-            setTimeout(() => {
-                loginText.classList.remove('hidden');
-                loadingSpinner.classList.add('hidden');
+        //     Simulate login process
+        //     setTimeout(() => {
+        //         loginText.classList.remove('hidden');
+        //         loadingSpinner.classList.add('hidden');
 
-                showMessage('Login successful! Redirecting...', 'success');
+        //         showMessage('Login successful! Redirecting...', 'success');
 
-                // Redirect after success message
-                setTimeout(() => {
-                    if (currentLoginType === 'admin') {
-                        window.location.href = '#admin-dashboard';
-                    } else {
-                        window.location.href = '#user-dashboard';
-                    }
-                }, 1500);
-            }, 2000);
-        });
+        //         Redirect after success message
+        //         setTimeout(() => {
+        //             if (currentLoginType === 'admin') {
+        //                 window.location.href = '#admin-dashboard';
+        //             } else {
+        //                 window.location.href = '#user-dashboard';
+        //             }
+        //         }, 1500);
+        //     }, 2000);
+        // });
 
         // Message System
         function showMessage(message, type) {

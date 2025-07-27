@@ -8,5 +8,10 @@ namespace Shoes_Store.Controllers
         {
             return View();
         }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

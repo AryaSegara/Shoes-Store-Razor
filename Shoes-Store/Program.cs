@@ -18,8 +18,6 @@ builder.Services.AddDbContext<ApplicationContext>(
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-
-
 // register service
 builder.Services.AddScoped<IAccountAdmin, AccountAdminService>();
 builder.Services.AddHttpContextAccessor();
@@ -54,15 +52,15 @@ builder.Services.AddSession(options =>
 });
 
 // Konfigurasi cookie authentication
-//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//    .AddCookie(options =>
-//    {
-//        options.LoginPath = "/Authentication/Login";
-//        options.AccessDeniedPath = "/Home/AccessDenied";
-//        options.SlidingExpiration = true; // Reset waktu kadaluarsa setiap kali pengguna aktif
-//        options.Cookie.HttpOnly = true; // Cookie tidak bisa diakses melalui JavaScript
-//        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Cookie hanya dikirim melalui HTTPS
-//    });
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/LoginUser/Index";
+        options.AccessDeniedPath = "/Home/AccessDenied";
+        options.SlidingExpiration = true; // Reset waktu kadaluarsa setiap kali pengguna aktif
+        options.Cookie.HttpOnly = true; // Cookie tidak bisa diakses melalui JavaScript
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Cookie hanya dikirim melalui HTTPS
+    });
 
 // Kebijakan Authorization
 //builder.Services.AddAuthorization(options =>
@@ -71,9 +69,6 @@ builder.Services.AddSession(options =>
 //    options.AddPolicy("RequireUserRole", policy => policy.RequireRole("User"));
 //    options.AddPolicy("RequireAnyRole", policy => policy.RequireRole("Admin", "User"));
 //});
-
-
-
 
 
 var app = builder.Build();
@@ -85,12 +80,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseSession();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

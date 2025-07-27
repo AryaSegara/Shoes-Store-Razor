@@ -12,12 +12,10 @@ namespace Shoes_Store.Controllers
     public class LoginUser : Controller
     {
         private readonly IUser _user;
-        private readonly ApplicationContext _contex;
 
-        public LoginUser(IUser user, ApplicationContext context)
+        public LoginUser(IUser user)
         {
             _user = user;
-            _contex = context;
         }
         public IActionResult Index()
         {
@@ -72,50 +70,7 @@ namespace Shoes_Store.Controllers
 
             if(success)
             {
-                var user = await _contex.Users.FindAsync(userId);
-
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.Name),
-                    new Claim(ClaimTypes.NameIdentifier, user.Username),
-                    new Claim("UserId", user.Id.ToString())
-                };
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-
-                // Konfigurasi properti autentikasi berdasarkan pilihan "Remember Me"
-                var authProperties = new AuthenticationProperties();
-
-                if (loginDTO.RememberMe)
-                {
-
-                    authProperties.IsPersistent = true;
-                    authProperties.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7);
-
-                    Console.WriteLine("Remember Me diaktifkan. Cookie akan bertahan 7 hari.");
-                }
-                else
-                {
-
-                    authProperties.IsPersistent = false;
-                    authProperties.ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(120);
-
-                    Console.WriteLine("Remember Me tidak diaktifkan. Cookie akan bertahan selama sesi browser.");
-                }
-
-
-                //meng encrpty
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    principal,
-                    authProperties
-                );
-
-
-                HttpContext.Session.SetInt32("UserId", user.Id);
-                HttpContext.Session.SetString("UserName", user.Name);
-
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "HomeUser");
 
             }
 

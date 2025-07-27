@@ -1,10 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Azure;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Shoes_Store.Interface;
 using Shoes_Store.Models;
 using Shoes_Store.Models.DB;
 using Shoes_Store.Models.DTO;
+using System.Numerics;
+using System.Security.Claims;
 using static Shoes_Store.Models.GeneralStatus;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Shoes_Store.Service
 {
@@ -83,6 +90,54 @@ namespace Shoes_Store.Service
                     return (false,0);
                 }
 
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim(ClaimTypes.NameIdentifier, user.Username),
+                    new Claim("UserId", user.Id.ToString())
+                };
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+
+                var authProperties = new AuthenticationProperties();
+
+                if (loginDTO.RememberMe)
+                {
+
+                    authProperties.IsPersistent = true;
+                    authProperties.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7);
+
+                    Console.WriteLine("Remember Me diaktifkan. Cookie akan bertahan 7 hari.");
+                }
+                else
+                {
+
+                    authProperties.IsPersistent = false;
+                    authProperties.ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(120);
+
+                    Console.WriteLine("Remember Me tidak diaktifkan. Cookie akan bertahan selama sesi browser.");
+                }
+
+                var httpContext = _httpContextAccessor.HttpContext;
+
+                // meng encrypt
+                await httpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    principal,
+                    authProperties
+                );
+
+                //Tambahkan cookie biasa(plain text) untuk menampilkan username
+                httpContext?.Response.Cookies.Append("DisplayUsername", user.Username, new CookieOptions
+                {
+                    HttpOnly = false, // Bisa diakses via JavaScript (opsional)
+                    Secure = true, // Hanya dikirim via HTTPS
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(30) // Sesuaikan
+                });
+
+                httpContext.Session.SetInt32("UserId", user.Id);
+                httpContext.Session.SetString("UserName", user.Name);
 
 
                 return (true,user.Id);

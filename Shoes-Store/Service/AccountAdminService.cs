@@ -56,6 +56,7 @@ namespace Shoes_Store.Service
                 Email = u.Email,
                 PhoneNumber = u.PhoneNumber,
                 Address = u.Address,
+                DateOfBirth = u.DateOfBirth,
                 Password = "*******",
                 ConfirmPassword = "*******",
                 UserStatus = u.UserStatus

@@ -551,7 +551,10 @@ wwwroot\assets\vendor\tinymce\tinymce.js
 wwwroot\assets\vendor\tinymce\tinymce.min.js
 wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\images\5f9819e2-9502-40d8-9508-5fa4eb1b56a7.jpeg
+wwwroot\images\default-product.png.jpeg
 wwwroot\images\ef7a8ae8-fc97-4ae5-ab21-57d27f8fdbe3.png
+wwwroot\images\f72323b4-c0fd-4f62-b87b-62a66f8d51df.jpeg
 wwwroot\images\fc3c24e6-03a5-46d2-9b21-2214f9730c21.png
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css

@@ -128,13 +128,13 @@ namespace Shoes_Store.Service
                 );
 
                 //Tambahkan cookie biasa(plain text) untuk menampilkan username
-                httpContext?.Response.Cookies.Append("DisplayUsername", user.Username, new CookieOptions
-                {
-                    HttpOnly = false, // Bisa diakses via JavaScript (opsional)
-                    Secure = true, // Hanya dikirim via HTTPS
-                    SameSite = SameSiteMode.Strict,
-                    Expires = DateTimeOffset.UtcNow.AddMinutes(30) // Sesuaikan
-                });
+                //httpContext?.Response.Cookies.Append("DisplayUsername", user.Username, new CookieOptions
+                //{
+                //    HttpOnly = false, // Bisa diakses via JavaScript (opsional)
+                //    Secure = true, // Hanya dikirim via HTTPS
+                //    SameSite = SameSiteMode.Strict,
+                //    Expires = DateTimeOffset.UtcNow.AddMinutes(30) // Sesuaikan
+                //});
 
                 httpContext.Session.SetInt32("UserId", user.Id);
                 httpContext.Session.SetString("UserName", user.Name);
@@ -193,6 +193,7 @@ namespace Shoes_Store.Service
                     user.Image = fileName;
                 }
 
+                _context.Update(user);
                 _context.SaveChanges();
                 return true;
 
@@ -227,6 +228,8 @@ namespace Shoes_Store.Service
 
             return datas;
         }
+
+
 
         private string HashPassword(string pin)
         {

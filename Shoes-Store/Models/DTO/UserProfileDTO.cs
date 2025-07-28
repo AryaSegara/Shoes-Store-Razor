@@ -13,5 +13,7 @@
 
         public string Password { get; set; }
         public IFormFile ImageFile { get; set; }
+
+        public string ImageUrl { get; set; }
     }
 }

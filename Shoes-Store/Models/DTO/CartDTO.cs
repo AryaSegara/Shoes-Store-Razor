@@ -2,9 +2,8 @@
 {
     public class CartDTO
     {
-        public int Id { get; set; }
-        public int UserId { get; set; }
-        public int ProductId { get; set; }
-        public int Jumlah { get; set; }
+        public List<CartItemDTO> Items { get; set; }
+        public decimal TotalPrice => Items?.Sum(i => i.Price * i.Quantity) ?? 0;
     }
+
 }

@@ -552,6 +552,9 @@ wwwroot\assets\vendor\tinymce\tinymce.min.js
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\images\5f9819e2-9502-40d8-9508-5fa4eb1b56a7.jpeg
+wwwroot\images\8b1b9592-dfc7-4a41-91b5-6ae9fd727cc0.jpeg
+wwwroot\images\9d07bde6-d6e2-4f34-a56a-77cb982fe6a7.jpeg
+wwwroot\images\ab2a653d-1dc9-43c1-b839-6eee12f399ac.jpeg
 wwwroot\images\default-product.png.jpeg
 wwwroot\images\ef7a8ae8-fc97-4ae5-ab21-57d27f8fdbe3.png
 wwwroot\images\f72323b4-c0fd-4f62-b87b-62a66f8d51df.jpeg

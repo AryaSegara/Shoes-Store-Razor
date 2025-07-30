@@ -70,7 +70,7 @@ namespace Shoes_Store.Controllers
 
             if(success)
             {
-                return RedirectToAction("Index", "HomeUser");
+                return RedirectToAction("ListProduct", "HomeUser");
 
             }
 

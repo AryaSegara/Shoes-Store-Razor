@@ -11,25 +11,26 @@ namespace Shoes_Store.Controllers
     {
         private readonly IUser _user;
         private readonly IUserSaldo _userSaldo;
+        private readonly IProduct _product;
 
-        public HomeUserController(IUser user, IUserSaldo userSaldo)
+        public HomeUserController(IUser user, IUserSaldo userSaldo, IProduct product)
         {
             _user = user;
             _userSaldo = userSaldo;
+            _product = product;
         }
 
-        public IActionResult Index()
-        {
-            int userId = GetCurrentUserId();
-            var user = _user.GetUserProfileeById(userId);
-            var userProfileDTO = new UserProfileDTO
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-            };
 
-            return View(userProfileDTO);
+        public IActionResult ListProduct()
+        {
+            var data = _product.GetListProduct();
+
+            return View(data);
+        }
+
+        public IActionResult TopUpSaldo()
+        {
+            return View(); 
         }
 
         //GET
@@ -85,13 +86,15 @@ namespace Shoes_Store.Controllers
             }
         }
 
+     
+
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             HttpContext.Session.Clear();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("ListProductHome", "Home");
         }
     }
 }

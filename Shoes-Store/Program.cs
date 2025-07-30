@@ -29,6 +29,7 @@ builder.Services.AddScoped<IProduct, ProductService>();
 builder.Services.AddScoped<IProductSize, ProductSizeService>();
 builder.Services.AddScoped<IUser, UserService>();
 builder.Services.AddScoped<IUserSaldo, UserSaldoService>();
+builder.Services.AddScoped<ICart, CartService>();
 
 builder.Services.AddSession();
 
@@ -90,6 +91,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=ListProductHome}/{id?}");
 
 app.Run();

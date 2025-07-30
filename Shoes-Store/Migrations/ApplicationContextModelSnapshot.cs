@@ -47,7 +47,7 @@ namespace Shoes_Store.Migrations
                         {
                             Id = 1,
                             Name = "Administrator",
-                            Pin = "$2b$10$..ft8tsJEdLChDx8NSwbo.5GQrNVS7rCEd9DyTZD2FLdvyhjqyipO"
+                            Pin = "$2b$10$bSknAeIR1vyXG2IC/JBFSOan8UHdiedz8jFFDVUuBe/e1GT1w83xi"
                         });
                 });
 
@@ -58,9 +58,6 @@ namespace Shoes_Store.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Jumlah")
-                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -84,14 +81,7 @@ namespace Shoes_Store.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalPrice")
                         .HasColumnType("int");
 
                     b.HasKey("ProductId", "CartId");

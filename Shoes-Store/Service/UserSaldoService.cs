@@ -85,6 +85,19 @@ namespace Shoes_Store.Service
             }
         }
 
+        public bool DeleteUserSaldo(int id) 
+        {
+            var data = _context.UserSaldos.FirstOrDefault(x => x.Id == id);
+            if (data == null)
+            {
+                return false;
+            }
+
+            _context.UserSaldos.Remove(data);
+            _context.SaveChanges();
+            return true;
+        }
+
         public bool ReduceUserSaldo(int userId, decimal amount)
         {
             try

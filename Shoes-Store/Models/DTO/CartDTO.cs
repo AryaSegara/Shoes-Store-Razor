@@ -2,8 +2,8 @@
 {
     public class CartDTO
     {
-        public List<CartItemDTO> Items { get; set; }
-        public decimal TotalPrice => Items?.Sum(i => i.Price * i.Quantity) ?? 0;
+        public List<CartItemDTO> Items { get; set; } = new List<CartItemDTO>();
+        public decimal Total { get; set; }
     }
 
 }

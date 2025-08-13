@@ -23,6 +23,7 @@ namespace Shoes_Store.Service
 
             var data = _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.ProductSizes)
                 .Where(x => x.ProductStatus != GeneralStatus.GeneralStatusData.delete)
                 .Select(x => new ProductDTO
                 {
@@ -32,7 +33,15 @@ namespace Shoes_Store.Service
                     Price = x.Price,
                     ImageUrl = baseUrl + x.Image,
                     CategoryName = x.Category.Name,
-                    ProductStatus = x.ProductStatus
+                    ProductStatus = x.ProductStatus,
+                    ProductSizes = x.ProductSizes.Select(s => new ProductSizeDTO
+                    {
+                        Id = s.Id,
+                        ProductId = s.ProductId,
+                        Size = s.Size,
+                        Stock = s.Stock
+                    }).ToList()
+                    
                 }).ToList();
 
             return data;

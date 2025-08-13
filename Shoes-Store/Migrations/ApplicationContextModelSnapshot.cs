@@ -47,7 +47,7 @@ namespace Shoes_Store.Migrations
                         {
                             Id = 1,
                             Name = "Administrator",
-                            Pin = "$2b$10$bSknAeIR1vyXG2IC/JBFSOan8UHdiedz8jFFDVUuBe/e1GT1w83xi"
+                            Pin = "$2b$10$.ErrTNAj4waqYMSOP2I0fOz4/ftEVNblaBzf58sDhFJl/GVFGUGK2"
                         });
                 });
 
@@ -81,12 +81,17 @@ namespace Shoes_Store.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
+                    b.Property<int>("ProductSizeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.HasKey("ProductId", "CartId");
 
                     b.HasIndex("CartId");
+
+                    b.HasIndex("ProductSizeId");
 
                     b.ToTable("CartDetails");
                 });
@@ -380,12 +385,20 @@ namespace Shoes_Store.Migrations
                     b.HasOne("Shoes_Store.Models.DB.Product", "Product")
                         .WithMany("CartDetails")
                         .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Shoes_Store.Models.DB.ProductSize", "ProductSize")
+                        .WithMany("cartDetails")
+                        .HasForeignKey("ProductSizeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Cart");
 
                     b.Navigation("Product");
+
+                    b.Navigation("ProductSize");
                 });
 
             modelBuilder.Entity("Shoes_Store.Models.DB.Order", b =>
@@ -486,6 +499,11 @@ namespace Shoes_Store.Migrations
                     b.Navigation("OrderDetails");
 
                     b.Navigation("ProductSizes");
+                });
+
+            modelBuilder.Entity("Shoes_Store.Models.DB.ProductSize", b =>
+                {
+                    b.Navigation("cartDetails");
                 });
 
             modelBuilder.Entity("Shoes_Store.Models.DB.User", b =>

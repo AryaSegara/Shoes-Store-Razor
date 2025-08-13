@@ -24,6 +24,10 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FydFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/c\#/Shoes-Store/Shoes-Store/Views/Cart/Percobaan.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FydFxQZXJjb2JhYW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/c\#/Shoes-Store/Shoes-Store/Views/Category/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -84,12 +88,28 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5Vc2VyXFJlZ2lzdGVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/c\#/Shoes-Store/Shoes-Store/Views/OrderDetail/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJEZXRhaWxcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/c\#/Shoes-Store/Shoes-Store/Views/OrderUser/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJVc2VyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/c\#/Shoes-Store/Shoes-Store/Views/OrderUser/UploadProof.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJVc2VyXFVwbG9hZFByb29mLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/c\#/Shoes-Store/Shoes-Store/Views/Order/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/c\#/Shoes-Store/Shoes-Store/Views/Order/Update.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcVXBkYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/c\#/Shoes-Store/Shoes-Store/Views/Payment/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5bWVudFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/c\#/Shoes-Store/Shoes-Store/Views/ProductSize/Index.cshtml]
@@ -114,6 +134,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/c\#/Shoes-Store/Shoes-Store/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/c\#/Shoes-Store/Shoes-Store/Views/UsersSaldo/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNTYWxkb1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/c\#/Shoes-Store/Shoes-Store/Views/Users/Index.cshtml]

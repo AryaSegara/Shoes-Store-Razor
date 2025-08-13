@@ -17,5 +17,7 @@ namespace Shoes_Store.Models.DTO
         public string CategoryName { get; set; }
         public int CategoryId { get; set; }
         public GeneralStatusData ProductStatus { get; set; }
+
+        public List<ProductSizeDTO> ProductSizes { get; set; }
     }
 }

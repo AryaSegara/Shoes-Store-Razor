@@ -51,7 +51,16 @@ namespace Shoes_Store.Models
             modelBuilder.Entity<CartDetail>()
                 .HasOne(ci => ci.Product)
                 .WithMany(c => c.CartDetails)
-                .HasForeignKey(ci => ci.ProductId);
+                .HasForeignKey(ci => ci.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            //Jadi, ketika Anda menghapus sebuah Product, ProductSize yang terkait akan ikut terhapus,
+            //dan CartDetail yang terkait dengan ProductSize tersebut juga akan ikut terhapus.
+
+            modelBuilder.Entity<CartDetail>()
+                .HasOne(cd => cd.ProductSize)
+                .WithMany(c => c.cartDetails)
+                .HasForeignKey(cd => cd.ProductSizeId);
 
             modelBuilder.Entity<Product>()
                 .HasOne(c => c.Category)

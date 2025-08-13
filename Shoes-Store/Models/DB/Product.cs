@@ -8,7 +8,7 @@ namespace Shoes_Store.Models.DB
         public string Name { get; set; }
         public string Description { get; set; }
         public int Price { get; set; }
-        public int Stok { get; set; }
+        //public int Stok { get; set; }
         public int CategoryId { get; set; } //foreign key category
         public Category Category { get; set; }
         public string Image { get; set; }

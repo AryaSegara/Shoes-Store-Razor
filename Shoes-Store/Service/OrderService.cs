@@ -5,6 +5,7 @@ using Shoes_Store.Models;
 using Shoes_Store.Models.DB;
 using Shoes_Store.Models.DTO;
 using static Shoes_Store.Models.GeneralOrderStatus;
+using static Shoes_Store.Models.GeneralPaymentStatus;
 
 namespace Shoes_Store.Service
 {
@@ -167,6 +168,45 @@ namespace Shoes_Store.Service
                 // Log error jika diperlukan
                 throw new Exception("Gagal membuat order: " + ex.Message);
             }
+        }
+
+
+        // chekout vaersi new
+        public Order GetOrderWithDetails(int orderId)
+        {
+            var order = _context.Orders
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Product)
+                .Include(o => o.User)
+                    .ThenInclude(u => u.UserSaldos)
+                .Include(o => o.Payment)
+                .FirstOrDefault(o => o.Id == orderId);
+
+            return order;
+        }
+
+        public bool UploadPaymentProof(int orderId, IFormFile proofImage, string bankName, string uploadsPath)
+        {
+            var order = _context.Orders
+                .Include(o => o.Payment)
+                .FirstOrDefault(o => o.Id == orderId);
+
+            if (order == null || proofImage == null) return false;
+
+            var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(proofImage.FileName)}";
+            var filePath = Path.Combine(uploadsPath, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                proofImage.CopyTo(stream);
+            }
+
+            order.Payment.ProofImage = $"/uploads/{fileName}";
+            order.Payment.BankName = bankName;
+            order.Payment.PaymentStatus = GeneralPaymentStatusData.Completed;
+
+            _context.SaveChanges();
+            return true;
         }
     }
 }

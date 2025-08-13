@@ -1,0 +1,255 @@
+﻿﻿@using Shoes_Store.Models.DB
+@using Shoes_Store.Models.DTO
+@model List<UserSaldoDTO>
+
+@{
+    Layout = "/Views/DashboardAdmin/LayoutAdmin.cshtml";
+    ViewData["Title"] = "User Balance Management";
+}
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>User Balance Management</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/DashboardAdmin/Index">Home</a></li>
+                <li class="breadcrumb-item"><a href="/UserSaldo/Index">User Balances</a></li>
+                <li class="breadcrumb-item active">List</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card user-saldo-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title">User Balance Management</h5>
+                        </div>
+
+                        <!-- Table with enhanced styling -->
+                        <div class="table-responsive">
+                            <table class="table datatable user-saldo-table">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>User Name</th>
+                                        <th>Saldo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var data in Model)
+                                    {
+                                        <tr>
+                                            <td>@data.Id</td>
+                                            <td class="text-truncate">@data.UserName</td>
+                                            <td class="saldo-format">@data.Saldo</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+
+<style>
+    /* Reuse root variables from _Layout.cshtml */
+    :root {
+        --primary: #1976D2;
+        --accent: #FFFFFF;
+        --accent-hover: #E3F2FD;
+        --background: #FAFAFA;
+        --text: #212121;
+        --text-muted: #757575;
+        --danger: #D32F2F;
+    }
+
+    .main {
+        background: var(--background);
+    }
+
+    .pagetitle {
+        background: var(--accent);
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+        .pagetitle h1 {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+    .breadcrumb-item a {
+        color: var(--primary);
+        transition: color 0.3s ease-in-out;
+    }
+
+        .breadcrumb-item a:hover {
+            color: var(--accent-hover);
+        }
+
+    .user-saldo-card {
+        background: var(--accent);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        animation: fadeInUp 0.5s ease-out 0.2s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+
+    .card-title {
+        color: var(--primary);
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .btn-create, .btn-update {
+        background: var(--primary);
+        color: var(--accent);
+        border-radius: 6px;
+        padding: 8px 16px;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+
+        .btn-create:hover, .btn-update:hover {
+            background: var(--accent-hover);
+            color: var(--primary);
+            opacity: 0.9;
+            transform: scale(1.05);
+            box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
+        }
+
+    .user-saldo-table {
+        background: var(--accent);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+        .user-saldo-table thead th {
+            background: var(--primary);
+            color: var(--accent);
+            font-weight: bold;
+            text-align: center;
+            padding: 12px;
+        }
+
+        .user-saldo-table tbody tr {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background 0.3s ease-in-out;
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+            .user-saldo-table tbody tr:nth-child(1) {
+                animation-delay: 0.3s;
+            }
+
+            .user-saldo-table tbody tr:nth-child(2) {
+                animation-delay: 0.35s;
+            }
+
+            .user-saldo-table tbody tr:nth-child(3) {
+                animation-delay: 0.4s;
+            }
+
+            .user-saldo-table tbody tr:nth-child(4) {
+                animation-delay: 0.45s;
+            }
+
+            .user-saldo-table tbody tr:nth-child(5) {
+                animation-delay: 0.5s;
+            }
+
+            .user-saldo-table tbody tr:hover {
+                background: var(--accent-hover);
+                transform: scale(1.02);
+                box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
+            }
+
+        .user-saldo-table tbody td {
+            vertical-align: middle;
+            color: var(--text);
+            text-align: center;
+            padding: 10px;
+            max-width: 150px; /* Limit column width */
+        }
+
+        .user-saldo-table tbody tr:nth-child(odd) {
+            background: var(--background);
+        }
+
+    .text-truncate {
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .badge {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+    }
+
+    /* Animations */
+    @@keyframes fadeInUp {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .table-responsive
+
+    {
+        overflow-x: auto;
+    }
+
+    .user-saldo-table th, .user-saldo-table td {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    .btn-create, .btn-update {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+    }
+
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Format saldo values
+            document.querySelectorAll('.saldo-format').forEach(function (element) {
+                let value = parseFloat(element.textContent);
+                if (!isNaN(value)) {
+                    if (value < 0) {
+                        element.innerHTML = `<span class="badge bg-danger">IDR ${value.toLocaleString("id-ID", { minimumFractionDigits: 0 })}</span>`;
+                    } else if (value < 1000) {
+                        element.innerHTML = `<span class="badge bg-warning">IDR ${value.toLocaleString("id-ID", { minimumFractionDigits: 0 })}</span>`;
+                    } else {
+                        element.textContent = `IDR ${value.toLocaleString("id-ID", { minimumFractionDigits: 0 })}`;
+                    }
+                }
+            });
+        });
+    </script>
+}

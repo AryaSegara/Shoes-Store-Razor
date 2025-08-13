@@ -10,5 +10,6 @@ namespace Shoes_Store.Interface
         public bool AddUserSaldo(UserSaldoDTO userSaldoDTO);
         public bool ReduceUserSaldo(int userId, decimal amount);
 
+        public bool DeleteUserSaldo(int id);
     }
 }

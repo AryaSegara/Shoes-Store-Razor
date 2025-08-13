@@ -4,11 +4,10 @@ namespace Shoes_Store.Interface
 {
     public interface ICart
     {
-        void AddToCart(int userId, int productId);
         CartDTO GetCart(int userId);
-        void UpdateQuantity(int userId, int productId, int quantity);
-        void RemoveItem(int userId, int productId);
-        //void Checkout(int userId);
+        void AddToCart(int userId, int productId, int productSizeId, int quantity);
+        void UpdateQuantity(int userId, int productId, int productSizeId, int quantity);
+        void RemoveFromCart(int userId, int productId, int productSizeId);
+        public (bool Success, string Message, int? OrderId) CheckoutAndCreateOrder(int userId);
     }
-
 }

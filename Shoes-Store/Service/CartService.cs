@@ -3,6 +3,8 @@ using Shoes_Store.Interface;
 using Shoes_Store.Models;
 using Shoes_Store.Models.DB;
 using Shoes_Store.Models.DTO;
+using static Shoes_Store.Models.GeneralOrderStatus;
+using static Shoes_Store.Models.GeneralPaymentStatus;
 
 namespace Shoes_Store.Service
 {
@@ -15,122 +17,187 @@ namespace Shoes_Store.Service
             _context = context;
         }
 
-        public void AddToCart(int userId, int productId)
-        {
-            var cart = _context.Carts
-                .Include(c => c.CartDetails)
-                .FirstOrDefault(c => c.UserId == userId);
-
-            if (cart == null)
-            {
-                cart = new Cart { UserId = userId, CartDetails = new List<CartDetail>() };
-                _context.Carts.Add(cart);
-                _context.SaveChanges(); // save to get cart ID
-            }
-
-            var cartDetail = _context.CartDetails
-                .FirstOrDefault(cd => cd.CartId == cart.Id && cd.ProductId == productId);
-
-            if (cartDetail != null)
-            {
-                cartDetail.Quantity++;
-            }
-            else
-            {
-                _context.CartDetails.Add(new CartDetail
-                {
-                    CartId = cart.Id,
-                    ProductId = productId,
-                    Quantity = 1
-                });
-            }
-
-            _context.SaveChanges();
-        }
-
         public CartDTO GetCart(int userId)
         {
             var cart = _context.Carts
                 .Include(c => c.CartDetails)
-                .ThenInclude(cd => cd.Product)
+                    .ThenInclude(cd => cd.Product)
+                .Include(c => c.CartDetails)
+                    .ThenInclude(cd => cd.ProductSize)
                 .FirstOrDefault(c => c.UserId == userId);
 
             if (cart == null)
             {
-                return new CartDTO { Items = new List<CartItemDTO>() };
+                return new CartDTO();
             }
 
             var items = cart.CartDetails.Select(cd => new CartItemDTO
             {
                 ProductId = cd.ProductId,
                 ProductName = cd.Product.Name,
-                ImageUrl = "/images/" +  cd.Product.Image,
+                ImageUrl ="/images/" +  cd.Product.Image,
                 Price = cd.Product.Price,
+                ProductSizeId = cd.ProductSizeId,
+                Size = cd.ProductSize.Size,
                 Quantity = cd.Quantity
             }).ToList();
 
-            return new CartDTO { Items = items };
+            return new CartDTO
+            {
+                Items = items,
+                Total = items.Sum(i => i.Price * i.Quantity)
+            };
         }
 
-        public void UpdateQuantity(int userId, int productId, int quantity)
+        public void AddToCart(int userId, int productId, int productSizeId, int quantity)
         {
-            var cart = _context.Carts.FirstOrDefault(c => c.UserId == userId);
-            if (cart == null) return;
-
-            var item = _context.CartDetails.FirstOrDefault(cd => cd.CartId == cart.Id && cd.ProductId == productId);
-            if (item != null)
+            // Tambahkan pengecekan ini
+            if (productSizeId <= 0)
             {
-                item.Quantity = quantity;
+                // Beri pesan error yang lebih jelas agar mudah di-debug
+                throw new ArgumentException("Product Size ID yang diterima tidak valid.", nameof(productSizeId));
+            }
+
+            var cart = _context.Carts.Include(c => c.CartDetails).FirstOrDefault(c => c.UserId == userId)
+                       ?? new Cart { UserId = userId, CartDetails = new List<CartDetail>() };
+
+            var existing = cart.CartDetails.FirstOrDefault(cd => cd.ProductId == productId && cd.ProductSizeId == productSizeId);
+
+            if (existing != null)
+            {
+                existing.Quantity += quantity;
+            }
+            else
+            {
+                cart.CartDetails.Add(new CartDetail
+                {
+                    ProductId = productId,
+                    ProductSizeId = productSizeId,
+                    Quantity = quantity
+                });
+            }
+
+            if (cart.Id == 0)
+                _context.Carts.Add(cart);
+
+            _context.SaveChanges();
+        }
+
+        public void UpdateQuantity(int userId, int productId, int productSizeId, int quantity)
+        {
+            var detail = _context.CartDetails
+                .Include(cd => cd.Cart)
+                .FirstOrDefault(cd => cd.Cart.UserId == userId && cd.ProductId == productId && cd.ProductSizeId == productSizeId);
+
+            if (detail != null)
+            {
+                detail.Quantity = quantity;
                 _context.SaveChanges();
             }
         }
 
-        public void RemoveItem(int userId, int productId)
+        public void RemoveFromCart(int userId, int productId, int productSizeId)
         {
-            var cart = _context.Carts.FirstOrDefault(c => c.UserId == userId);
-            if (cart == null) return;
+            var detail = _context.CartDetails
+                .Include(cd => cd.Cart)
+                .FirstOrDefault(cd => cd.Cart.UserId == userId && cd.ProductId == productId && cd.ProductSizeId == productSizeId);
 
-            var item = _context.CartDetails.FirstOrDefault(cd => cd.CartId == cart.Id && cd.ProductId == productId);
-            if (item != null)
+            if (detail != null)
             {
-                _context.CartDetails.Remove(item);
+                _context.CartDetails.Remove(detail);
                 _context.SaveChanges();
             }
         }
 
-        //public void Checkout(int userId)
-        //{
-        //    var cart = _context.Carts
-        //        .Include(c => c.CartDetails)
-        //        .ThenInclude(cd => cd.Product)
-        //        .FirstOrDefault(c => c.UserId == userId);
+        public (bool Success, string Message, int? OrderId) CheckoutAndCreateOrder(int userId)
+        {
+            var cart = _context.Carts
+                .Include(c => c.CartDetails)
+                    .ThenInclude(cd => cd.Product)
+                .Include(c => c.CartDetails)
+                    .ThenInclude(cd => cd.ProductSize)
+                .FirstOrDefault(c => c.UserId == userId);
 
-        //    if (cart == null || !cart.CartDetails.Any()) return;
+            var user = _context.Users
+                .Include(u => u.UserSaldos)
+                .FirstOrDefault(u => u.Id == userId);
 
-        //    var order = new Order
-        //    {
-        //        UserId = userId,
-        //        OrderDate = DateTime.Now,
-        //        PaymentId = 1, // contoh default payment
-        //        OrderDetails = new List<OrderDetail>()
-        //    };
+            if (cart == null || user == null)
+                return (false, "Cart atau user tidak ditemukan", null);
 
-        //    foreach (var item in cart.CartDetails)
-        //    {
-        //        order.OrderDetails.Add(new OrderDetail
-        //        {
-        //            ProductId = item.ProductId,
-        //            Quantity = item.Quantity,
-        //            //Price = item.Product.Price
-        //        });
-        //    }
+            var saldo = user.UserSaldos.OrderByDescending(s => s.Id).FirstOrDefault()?.Saldo ?? 0;
+            var total = cart.CartDetails.Sum(cd => cd.Product.Price * cd.Quantity);
 
-        //    _context.Orders.Add(order);
+            if (saldo < total)
+                return (false, "Saldo tidak cukup", null);
 
-        //    // bersihkan keranjang
-        //    _context.CartDetails.RemoveRange(cart.CartDetails);
+            foreach (var item in cart.CartDetails)
+            {
+                var size = _context.ProductSizes.FirstOrDefault(ps => ps.Id == item.ProductSizeId);
+                if (size == null || size.Stock < item.Quantity)
+                    return (false, $"Stok tidak cukup untuk produk {item.Product.Name} ukuran {size?.Size}", null);
 
-        //    _context.SaveChanges();
-        //}
+                size.Stock -= item.Quantity;
+            }
+
+            var payment = new Payment
+            {
+                TotalAmount = total,
+                PaymentStatus = GeneralPaymentStatusData.Pending,
+                PaymentDate = DateTime.Now,
+                PaymentMethod = "Transfer"
+            };
+            _context.Payments.Add(payment);
+
+            var order = new Order
+            {
+                UserId = userId,
+                OrderCode = $"ORD{DateTime.Now.Ticks}",
+                OrderDate = DateTime.Now,
+                Payment = payment,
+                Status = GeneralOrderStatusData.Processing,
+                OrderDetails = cart.CartDetails.Select(cd => new OrderDetail
+                {
+                    ProductId = cd.ProductId,
+                    Quantity = cd.Quantity,
+                    SelectedSize = cd.ProductSize.Size,
+                    Image = cd.Product.Image,
+                    PriceAtPurchase = cd.Product.Price
+                }).ToList()
+            };
+
+            _context.Orders.Add(order);
+
+            // Cek apakah UserSaldo sudah ada
+            var existingSaldo = user.UserSaldos
+                .OrderByDescending(s => s.Id)
+                .FirstOrDefault();
+
+            if (existingSaldo != null)
+            {
+                // Update saldo yang sudah ada
+                existingSaldo.Saldo -= total;
+                existingSaldo.LastUpdated = DateTime.Now;
+                _context.UserSaldos.Update(existingSaldo);
+            }
+            else
+            {
+                // Kalau belum ada, buat entri baru
+                _context.UserSaldos.Add(new UserSaldo
+                {
+                    UserId = userId,
+                    Saldo = saldo - total,
+                    LastUpdated = DateTime.Now
+                });
+            }
+
+
+            _context.CartDetails.RemoveRange(cart.CartDetails);
+            _context.Carts.Remove(cart);
+
+            _context.SaveChanges();
+
+            return (true, "Checkout berhasil", order.Id);
+        }
     }
 }

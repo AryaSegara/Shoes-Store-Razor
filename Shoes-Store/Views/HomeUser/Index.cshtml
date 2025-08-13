@@ -232,10 +232,13 @@
                                 <span class="font-medium">Settings</span>
                             </a>
                             <hr class="my-2 border-gray-200">
-                            <a href="/HomeUser/Logout" class="flex items-center px-4 py-3 text-red-600 hover:bg-red-50 transition-all duration-300">
+                            <form asp-action="Logout" asp-controller="HomeUser" method="post">
+                            <button type="submit" class="flex items-center px-4 py-3 text-red-600 hover:bg-red-50 transition-all duration-300">
                                 <i class="fas fa-sign-out-alt mr-3"></i>
                                 <span class="font-medium">Logout</span>
-                            </a>
+                            </button>>
+
+                            </form>
                         </div>
                     </div>
                 </div>

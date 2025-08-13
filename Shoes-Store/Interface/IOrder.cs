@@ -14,5 +14,8 @@ namespace Shoes_Store.Interface
         public List<SelectListItem> Orders();
         public int CreateNewOrder(int userId, int productId, int productSizeId, int quantity);
 
+        Order GetOrderWithDetails(int orderId);
+        bool UploadPaymentProof(int orderId, IFormFile proofImage, string bankName, string uploadsPath);
+
     }
 }

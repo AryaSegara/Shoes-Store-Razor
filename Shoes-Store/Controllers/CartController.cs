@@ -13,45 +13,47 @@ namespace Shoes_Store.Controllers
             _cart = cart;
         }
 
-        [HttpPost]
-        public IActionResult AddToCart(int productId)
-        {
-            int userId = GetCurrentUserId(); // ganti sesuai sistem login kamu
-            _cart.AddToCart(userId, productId);
-            return RedirectToAction("ListProduct","HomeUser");
-        }
-
+        [HttpGet]
         public IActionResult Index()
         {
-            int userId = GetCurrentUserId(); // ganti sesuai login kamu
-            var cart = _cart.GetCart(userId);
+            var cart = _cart.GetCart(GetCurrentUserId());
             return View(cart);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult UpdateQuantity(int productId, int quantity)
+        public IActionResult Add(int productId, int productSizeId, int quantity)
         {
-            int userId = GetCurrentUserId();
-            _cart.UpdateQuantity(userId, productId, quantity);
+            _cart.AddToCart(GetCurrentUserId(), productId, productSizeId, quantity);
+            return RedirectToAction("ListProduct","HomeUser");
+        }
+
+        [HttpPost]
+        public IActionResult Update(int productId, int productSizeId, int quantity)
+        {
+            _cart.UpdateQuantity(GetCurrentUserId(), productId, productSizeId, quantity);
             return RedirectToAction("Index","Cart");
         }
 
         [HttpPost]
-        public IActionResult RemoveItem(int productId)
+        public IActionResult Remove(int productId, int productSizeId)
         {
-            int userId = GetCurrentUserId();
-            _cart.RemoveItem(userId, productId);
+            _cart.RemoveFromCart(GetCurrentUserId(), productId, productSizeId);
             return RedirectToAction("Index","Cart");
         }
 
-        //[HttpPost]
-        //public IActionResult Checkout()
-        //{
-        //    int userId = GetCurrentUserId();
-        //    _cart.Checkout(userId);
-        //    TempData["Message"] = "Checkout berhasil!";
-        //    return RedirectToAction("Index");
-        //}
+        [HttpPost]
+        public IActionResult Checkout()
+        {
+            var result = _cart.CheckoutAndCreateOrder(GetCurrentUserId());
+
+            if (!result.Success)
+            {
+                TempData["Message"] = result.Message;
+                return RedirectToAction("Index", "Cart");
+            }
+
+            return RedirectToAction("UploadProof", "OrderUser", new { orderId = result.OrderId });
+        }
+
     }
 }

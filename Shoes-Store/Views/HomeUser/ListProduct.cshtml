@@ -13,7 +13,7 @@
         <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Featured Collection</h2>
         <p class="text-xl text-gray-600 max-w-2xl mx-auto">Handpicked shoes that define modern fashion and uncompromising comfort</p>
     </div>
-
+    
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         @foreach (var item in Model)
         {
@@ -43,13 +43,42 @@
                     </div>
 
                     <!-- FORM Add to Cart -->
-                    <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                    @* <form asp-controller="Cart" asp-action="AddToCart" method="post">
                         <input type="hidden" name="productId" value="@item.Id" />
                         <button type="submit"
                                 class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 mb-2">
                             <i class="fas fa-cart-plus mr-2"></i>Add to Cart
                         </button>
-                    </form>
+                    </form> *@
+                    @* <button onclick="openModal(@Html.Raw(Json.Serialize(item.ProductSizes)), @item.Id)"
+                            type="button"
+                            class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 mb-2">
+                        <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+                    </button> *@
+
+                    @if (item.ProductSizes != null && item.ProductSizes.Any(ps => ps.Stock > 0))
+                    {
+                        // Kita akan serialize JSON secara eksplisit dan membungkusnya dengan kutip tunggal
+                        var productSizesJson = System.Text.Json.JsonSerializer.Serialize(item.ProductSizes.Where(ps => ps.Stock > 0));
+
+                        <button type="button"
+                                data-sizes='@productSizesJson'
+                                data-productid="@item.Id"
+                                onclick="openModal(this)"
+                                class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 mb-2">
+                            <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+                        </button>
+                    }
+                    else
+                    {
+                        // Blok 'else' tetap sama
+                        <button type="button"
+                                class="w-full bg-gray-400 text-white py-3 rounded-xl font-semibold cursor-not-allowed mb-2" disabled>
+                            <i class="fas fa-times-circle mr-2"></i>Stok Habis
+                        </button>
+                    }
+                    
+
 
                     <!-- Tombol Detail -->
                     <a href="@Url.Action("Detail", "Product", new { id = item.Id })"
@@ -60,4 +89,66 @@
             </div>
         }
     </div>
+    <!-- Modal Container -->
+    <div id="sizeModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+        <div class="bg-white rounded-2xl p-6 w-96 relative">
+            <button onclick="closeModal()" class="absolute top-2 right-4 text-xl">&times;</button>
+            <h3 class="text-xl font-bold mb-4">Pilih Ukuran</h3>
+
+            <form id="modalForm" asp-controller="Cart" asp-action="Add" method="post">
+                <input type="hidden" name="productId" id="modalProductId" />
+
+                <label for="size" class="block mb-2 font-semibold">Ukuran:</label>
+                <select name="productSizeId" id="modalSize" class="w-full p-2 border rounded mb-4" required></select>
+
+                <label for="quantity" class="block mb-2 font-semibold">Jumlah:</label>
+                <input type="number" name="quantity" id="modalQuantity" class="w-full p-2 border rounded mb-4" value="1" min="1" required />
+
+                <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">
+                    Tambah ke Keranjang
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+         function openModal(buttonElement) {
+            // Ambil data dari atribut 'data-*' di tombol
+            const sizesJson = buttonElement.getAttribute('data-sizes');
+            const productId = buttonElement.getAttribute('data-productid');
+
+            // Ubah string JSON kembali menjadi object/array JavaScript
+            const sizes = JSON.parse(sizesJson);
+
+            // Get element modal seperti biasa
+            const modal = document.getElementById('sizeModal');
+            const sizeSelect = document.getElementById('modalSize');
+            const productInput = document.getElementById('modalProductId');
+            const quantityInput = document.getElementById('modalQuantity');
+
+            // Isi nilai-nilai ke dalam form modal
+            productInput.value = productId;
+
+            sizeSelect.innerHTML = '';
+            sizes.forEach(size => {
+                const option = document.createElement('option');
+                option.value = size.Id;
+                option.text = `Ukuran ${size.Size} (Stok: ${size.Stock})`;
+                sizeSelect.appendChild(option);
+            });
+
+            quantityInput.value = 1;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('sizeModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    </script>
 </section>
+
+
+

@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Shoes_Store.Interface;
 using Shoes_Store.Models;
-using Shoes_Store.Models.DB;
 using Shoes_Store.Models.DTO;
-using Shoes_Store.Service;
 
 namespace Shoes_Store.Controllers
 {
@@ -72,7 +68,7 @@ namespace Shoes_Store.Controllers
             return View(userProfileDTO);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         public async Task<IActionResult> MyProfile(UserProfileDTO userProfileDTO)
         {
